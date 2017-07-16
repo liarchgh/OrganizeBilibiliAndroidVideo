@@ -13,19 +13,13 @@
 
 using namespace std;
 
-string midDir = "lua.video.bapi.3",
-       video = ".flv";
 
 int main() {
     printf("please write the path:\n");
     string path = "D:/Video/cartoon/ff";
     cin >> path;
     cout << path << endl;
-    //char *path = gets();
-    DIR *dir = opendir(&path[0]);
-    // puts(&path[0]);
-    //进入第0层目录
-    dirent *dd = readdir(dir);
+    dirent *dd = readPath(path);
     while(!strcmp(dd->d_name, ".") || !strcmp(dd->d_name, "..")) {
         dd = readdir(dir);
     }
@@ -41,9 +35,7 @@ int main() {
     for(int i = 0; i < root.size(); ++i) {
     //th1path是第1级目录 这里面有lua。。。文件夹需要进去
         string th1path = path + "/" + root[i];
-        DIR* td = opendir(&th1path[0]);
-        // puts(&(path + "/" + root[i])[0]);
-        dirent * th1 = readdir(td);
+        dirent * th1 = readPath(th1path);
         while(th1) {
             //进入到第1级目录
             //去除.和..
@@ -53,6 +45,7 @@ int main() {
             //th1是当前第1级目录下的文件内容 若当前不是目录文件 th2path是第2级目录的路径
             string th2path = th1path + "/" + th1->d_name;
             string forVid = th1->d_name;
+            string video;
             for(int i = 0; i < forVid.size(); ++i){
                 if(forVid[i] == '.'){
                     ++i;
@@ -108,6 +101,11 @@ int main() {
         }
     }
     return 0;
+}
+
+dirent * readPath(string path){
+    DIR* td = opendir(&path[0]);
+    return readdir(td);
 }
 
 /*
